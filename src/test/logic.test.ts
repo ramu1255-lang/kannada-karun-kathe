@@ -71,7 +71,7 @@ describe("quiz", () => {
     expect(buildQuiz(VOCABULARY.slice(0, 4), 10)).toHaveLength(4);
   });
   it("validates and checks answers", () => {
-    const q = qs[0];
+    const q = qs[0]!;
     const wrong = q.options.find((o) => o !== q.answer)!;
     expect(checkAnswer(q, q.answer)).toBe(true);
     expect(checkAnswer(q, wrong)).toBe(false);
@@ -81,7 +81,7 @@ describe("quiz", () => {
   });
   it("scores correctly, including empty and missing answers", () => {
     expect(scoreQuiz(qs, qs.map((q) => q.answer))).toEqual({ correct: 5, total: 5, percent: 100 });
-    expect(scoreQuiz(qs, [qs[0].answer, qs[1].answer])).toEqual({ correct: 2, total: 5, percent: 40 });
+    expect(scoreQuiz(qs, [qs[0]!.answer, qs[1]!.answer])).toEqual({ correct: 2, total: 5, percent: 40 });
     expect(scoreQuiz([], [])).toEqual({ correct: 0, total: 0, percent: 0 });
   });
 });

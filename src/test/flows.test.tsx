@@ -55,17 +55,17 @@ describe("quiz flow", () => {
       return radios;
     };
     // pick first option, check, then proceed
-    fireEvent.click(answerFor()[0]);
+    fireEvent.click(answerFor()[0]!);
     fireEvent.click(screen.getByRole("button", { name: /check answer/i }));
     expect(screen.getByText(/correct!|incorrect\. the answer is/i)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /next question/i }));
 
-    fireEvent.click(answerFor()[1]);
+    fireEvent.click(answerFor()[1]!);
     fireEvent.click(screen.getByRole("button", { name: /check answer/i }));
     fireEvent.click(screen.getByRole("button", { name: /see results/i }));
 
     expect(onComplete).toHaveBeenCalledTimes(1);
-    const score = onComplete.mock.calls[0][0];
+    const score = onComplete.mock.calls[0]![0];
     expect(score.total).toBe(2);
     const result = screen.getByRole("heading", { name: /quiz complete/i }).parentElement!;
     expect(within(result).getByText(new RegExp(`${score.correct} out of 2`))).toBeInTheDocument();

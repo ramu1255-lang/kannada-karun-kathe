@@ -50,7 +50,7 @@ export function Quiz({ words, count = 5, rng, onComplete }: Props) {
     );
   }
 
-  const q = questions[index];
+  const q = questions[index] ?? questions[0]!;
   const correct = submitted && checkAnswer(q, choice);
 
   const submit = () => {

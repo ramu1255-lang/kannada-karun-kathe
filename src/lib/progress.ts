@@ -29,15 +29,15 @@ export function parseProgress(raw: string | null): Progress {
   try {
     const d = JSON.parse(raw) as Record<string, unknown>;
     if (!d || typeof d !== "object") return { ...EMPTY_PROGRESS };
-    const ids = Array.isArray(d.learnedWordIds)
-      ? [...new Set(d.learnedWordIds.filter((x): x is string => typeof x === "string" && x.length <= 64))]
+    const ids = Array.isArray(d["learnedWordIds"])
+      ? [...new Set(d["learnedWordIds"].filter((x): x is string => typeof x === "string" && x.length <= 64))]
       : [];
     return {
       learnedWordIds: ids,
       quizzesTaken:
-        typeof d.quizzesTaken === "number" && d.quizzesTaken >= 0 ? Math.floor(d.quizzesTaken) : 0,
-      bestPercent: clampPercent(d.bestPercent),
-      lastPercent: d.lastPercent === null || d.lastPercent === undefined ? null : clampPercent(d.lastPercent),
+        typeof d["quizzesTaken"] === "number" && d["quizzesTaken"] >= 0 ? Math.floor(d["quizzesTaken"]) : 0,
+      bestPercent: clampPercent(d["bestPercent"]),
+      lastPercent: d["lastPercent"] === null || d["lastPercent"] === undefined ? null : clampPercent(d["lastPercent"]),
     };
   } catch {
     return { ...EMPTY_PROGRESS };
