@@ -1,38 +1,4 @@
 import { Link } from "@tanstack/react-router";
-
-export const NAV_ITEMS = [
-  { to: "/", label: "Home" },
-  { to: "/vocabulary", label: "Vocabulary" },
-  { to: "/conversations", label: "Conversations" },
-  { to: "/quiz", label: "Quiz" },
-  { to: "/progress", label: "Progress" },
-] as const;
-
-export function SiteNav() {
-  return (
-    <header className="border-b bg-card">
-      <div className="flag-stripe h-1.5" aria-hidden="true" />
-      <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <Link to="/" className="font-display text-xl font-bold text-primary">
-          Kannada for Everyone
-        </Link>
-        <nav aria-label="Main">
-          <ul className="flex flex-wrap gap-1">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  activeOptions={{ exact: item.to === "/" }}
-                  className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-foreground hover:bg-muted data-[status=active]:bg-secondary data-[status=active]:text-secondary-foreground"
-                  activeProps={{ "aria-current": "page" }}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    </header>
-  );
-}
+import { BookOpen, Home, Languages, MessageCircle, Trophy, Route, ArrowUpRight, Heart } from "lucide-react";
+export const NAV_ITEMS=[{to:"/",label:"Learn",icon:Home},{to:"/vocabulary",label:"Vocabulary",icon:BookOpen},{to:"/translator",label:"Translator",icon:Languages},{to:"/conversations",label:"Conversations",icon:MessageCircle},{to:"/quiz",label:"Practice",icon:Trophy},{to:"/progress",label:"Progress",icon:Route}] as const;
+export function SiteNav(){return <header className="side-nav"><Link to="/" className="flex items-center gap-3"><span className="brand-mark" lang="kn">ಕ</span><span className="font-display text-base font-black leading-tight">Kannada<span className="block text-xs font-bold text-primary">for Everyone</span></span></Link><p className="section-label mb-3 mt-10 hidden min-[701px]:block">Your learning space</p><nav aria-label="Main" className="space-y-1 max-[700px]:space-y-0">{NAV_ITEMS.map(({to,label,icon:Icon})=><Link key={to} to={to} activeOptions={{exact:to==="/"}} activeProps={{"aria-current":"page"}} className="nav-link"><Icon className="size-20 size-5" aria-hidden="true"/>{label}</Link>)}</nav><div className="nav-bottom mt-auto"><div className="rounded-xl bg-yellow-soft p-4"><Heart className="mb-2 size-5 text-coral"/><p className="text-sm font-extrabold">Small steps. Big connections.</p><p className="mt-1 text-xs text-muted-foreground">Every word opens a new door.</p><Link to="/quiz" className="mt-3 flex items-center gap-2 text-xs font-bold text-primary">Make today's step <ArrowUpRight className="size-4"/></Link></div><p className="mt-5 text-[10px] font-semibold text-muted-foreground">KANNADA TECHNOLOGY CHALLENGE</p></div></header>;}
