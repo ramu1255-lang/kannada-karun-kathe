@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { TopBar } from "../components/TopBar";
+import { Toaster } from "../components/ui/sonner";
 import { SiteNav } from "../components/SiteNav";
 
 function NotFoundComponent() {
@@ -94,7 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Telugu&family=Noto+Sans:wght@400;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Nunito+Sans:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Telugu&family=Noto+Sans:wght@400;600&display=swap",
       },
     ],
   }),
@@ -126,13 +128,7 @@ function RootComponent() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-card focus:p-3">
         Skip to content
       </a>
-      <SiteNav />
-      <main id="main" tabIndex={-1} className="mx-auto max-w-4xl px-4 py-8">
-        <Outlet />
-      </main>
-      <footer className="mx-auto max-w-4xl px-4 pb-8 text-sm text-muted-foreground">
-        Pronunciation guides are simplified; listen to native speakers to refine your accent.
-      </footer>
+      <div className="app-shell"><SiteNav /><div className="min-w-0"><TopBar /><main id="main" tabIndex={-1} className="page-content"><Outlet /></main><footer className="px-6 pb-6 text-center text-xs text-muted-foreground">Made for everyday life in Karnataka · Learn a little. Connect a lot.</footer></div></div><Toaster />
     </QueryClientProvider>
   );
 }

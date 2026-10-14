@@ -1,50 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CONVERSATIONS, VOCABULARY } from "@/lib/kannada/data";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Kannada for Everyone — Learn everyday Kannada" },
-      { name: "description", content: "Learn practical Kannada with vocabulary, real conversations, Telugu meanings and quizzes." },
-      { property: "og:title", content: "Kannada for Everyone" },
-      { property: "og:description", content: "Learn practical everyday Kannada with conversations, vocabulary and guided practice." },
-    ],
-  }),
-  component: Index,
-});
-
-const FEATURES = [
-  { to: "/vocabulary", title: "Vocabulary", text: `${VOCABULARY.length} everyday words with English, Telugu and pronunciation.` },
-  { to: "/conversations", title: "Conversations", text: `${CONVERSATIONS.length} real-life dialogues: neighbours, autos, restaurants.` },
-  { to: "/quiz", title: "Quiz", text: "Check yourself with quick multiple-choice practice." },
-] as const;
-
-function Index() {
-  return (
-    <div className="space-y-10">
-      <section className="pt-6">
-        <p lang="kn" className="kannada-text text-4xl font-bold text-primary">ನಮಸ್ಕಾರ!</p>
-        <h1 className="mt-2 text-4xl font-bold sm:text-5xl">Speak everyday Kannada with confidence</h1>
-        <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
-          For newcomers to Karnataka: learn the words and phrases you actually need, with Telugu meanings and simple pronunciation guides.
-        </p>
-        <Link to="/vocabulary" className="mt-6 inline-flex min-h-11 items-center rounded-md bg-primary px-6 font-semibold text-primary-foreground hover:opacity-90">
-          Start learning
-        </Link>
-      </section>
-      <section aria-labelledby="features">
-        <h2 id="features" className="text-2xl font-bold">How you'll learn</h2>
-        <ul className="mt-4 grid gap-4 sm:grid-cols-3">
-          {FEATURES.map((f) => (
-            <li key={f.to}>
-              <Link to={f.to} className="block h-full rounded-xl border bg-card p-5 hover:border-primary">
-                <h3 className="text-xl font-bold">{f.title}</h3>
-                <p className="mt-1 text-muted-foreground">{f.text}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
-  );
-}
+import { ArrowRight, BookOpen, Flame, Languages, ChevronRight, Check, LockKeyhole, Target, Trophy, Volume2, Zap } from "lucide-react";
+import mascot from "@/assets/parakeet.png";
+import { Button } from "@/components/ui/button";
+import { ListenButton } from "@/components/ListenButton";
+import { CATEGORIES, VOCABULARY } from "@/lib/kannada/data";
+import { CATEGORY_STYLE } from "@/lib/category-style";
+import { useProgress } from "@/lib/progress";
+import { dayKey, useGame } from "@/lib/game";
+export const Route=createFileRoute("/")({head:()=>({meta:[{title:"Your learning journey — Kannada for Everyone"},{name:"description",content:"Learn everyday Kannada with Telugu guidance, a colourful learning path and real AI translation."},{property:"og:title",content:"Your Kannada learning journey"},{property:"og:description",content:"Little steps toward everyday Kannada confidence."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}),component:Index});
+function Index(){const {progress}=useProgress();const {game}=useGame();const today=game.activities.filter(a=>a.day===dayKey()).reduce((n,a)=>n+a.xp,0);const learned=progress.learnedWordIds.length;const daily=VOCABULARY[Math.floor(Date.now()/86400000)%VOCABULARY.length]??VOCABULARY[0];return <div className="learning-layout"><div className="min-w-0 space-y-7"><section className="learning-hero"><img src={mascot} width={1024} height={1024} className="hero-mascot" alt="Mitra, a cheerful parakeet with a book and backpack"/><div className="hero-copy"><span className="mb-3 inline-flex items-center gap-2 rounded-full bg-card/70 px-3 py-1 text-[11px] font-extrabold text-primary"><span className="size-1.5 rounded-full bg-primary"/> YOUR NEXT CHAPTER STARTS HERE</span><h1>Kannada for Everyone<span className="mt-1 block text-primary">One word. A new connection.</span></h1><p className="mt-3 text-muted-foreground">From your first ನಮಸ್ಕಾರ to everyday conversations.<br className="hidden sm:block"/> Let's make Karnataka feel a little more like home.</p><Button asChild className="mt-5" size="lg"><Link to="/vocabulary">{learned?"Continue learning":"Let's start learning"}<ArrowRight/></Link></Button><p className="mt-3 text-xs font-bold text-primary">English + తెలుగు guidance · At your own pace</p></div></section><section><div className="mb-4 flex items-center justify-between"><h2>Your learning path</h2><span className="rounded-full bg-accent px-3 py-1 text-xs font-bold text-primary">Level {1+Math.floor(game.xp/100)} · Beginner</span></div><div className="panel overflow-hidden"><div className="flex items-center gap-4 border-b bg-accent/40 p-5"><span className="category-icon bg-primary text-primary-foreground"><BookOpen className="size-6"/></span><div className="flex-1"><p className="section-label text-primary">UNIT 01 · THE FIRST STEPS</p><h3 className="mt-1">Start with a hello</h3><p className="text-xs text-muted-foreground">Greetings, introductions & everyday essentials</p></div><span className="text-xs font-bold text-primary">{Math.min(learned,16)} / 16</span></div><ol className="p-5">{[{label:"Meet your first Kannada words",sub:"Greetings & basics",icon:BookOpen,to:"/vocabulary",complete:learned>=5},{label:"Put your words to the test",sub:"A quick vocabulary challenge",icon:Trophy,to:"/quiz",complete:progress.quizzesTaken>0},{label:"Say it in a conversation",sub:"Meet a neighbour",icon:Languages,to:"/conversations",complete:false}].map((s,i)=><li key={s.label} className={i?"path-line pt-5":""}><Link to={s.to as "/vocabulary"|"/quiz"|"/conversations"} className="flex items-center gap-4"><span className={`flex size-11 shrink-0 items-center justify-center rounded-full ${s.complete?"bg-primary text-primary-foreground":i===0?"bg-secondary text-secondary-foreground":"bg-muted text-muted-foreground"}`}>{s.complete?<Check className="size-5"/>:<s.icon className="size-5"/>}</span><div className="flex-1"><p className="text-sm font-extrabold">{s.label}</p><p className="text-xs text-muted-foreground">{s.sub}</p></div><ChevronRight className="size-4 text-muted-foreground"/></Link></li>)}</ol></div></section><section><div className="mb-4 flex items-center justify-between"><h2>A little Kannada for every day</h2><Link to="/vocabulary" className="flex items-center gap-1 text-xs font-bold text-primary">View all <ArrowRight className="size-3"/></Link></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{CATEGORIES.filter(c=>["greetings","college","food","travel"].includes(c.id)).map(c=>{const {icon:Icon,color}=CATEGORY_STYLE[c.id];return <Link to="/vocabulary" key={c.id} className="panel p-4 transition-transform hover:-translate-y-1"><span className={`category-icon mb-3 ${color}`}><Icon className="size-6"/></span><h3 className="text-sm">{c.id==="greetings"?"Greetings":c.label}</h3><p className="mt-1 text-xs text-muted-foreground">{VOCABULARY.filter(w=>w.category===c.id).length} words & phrases</p></Link>;})}</div></section></div><aside className="home-aside space-y-5 max-[1100px]:space-y-0"><section className="panel p-5"><div className="flex items-center justify-between"><h2 className="text-base">Today's goal</h2><Target className="size-5 text-coral"/></div><div className="my-6 flex justify-center"><div className="flex size-32 flex-col items-center justify-center rounded-full border-8 border-accent"><Zap className="mb-1 size-5 text-yellow"/><strong className="text-3xl">{today}<span className="text-sm text-muted-foreground"> / 30</span></strong><span className="text-xs text-muted-foreground">XP earned today</span></div></div><progress className="progress-meter" aria-label="Daily XP goal" value={Math.min(today,30)} max={30}/><p className="mt-3 text-center text-xs font-semibold text-muted-foreground">{today>=30?"Daily goal complete. Well done!":"Small effort today. Real progress tomorrow."}</p><Button asChild variant="outline" className="mt-4 w-full"><Link to="/quiz">Quick practice <ArrowRight/></Link></Button></section>{daily&&<section className="panel overflow-hidden"><div className="flex items-center gap-2 bg-yellow-soft px-5 py-3 text-xs font-extrabold text-yellow"><BookOpen className="size-4"/> PHRASE OF THE DAY</div><div className="p-5"><div className="flex items-center justify-between"><p lang="kn" className="kannada-text text-2xl font-bold">{daily.kannada}</p><ListenButton text={daily.kannada}/></div><p className="mt-2 text-sm font-bold">{daily.english}</p><p className="mt-1 text-xs text-muted-foreground">{daily.pronunciation}</p><p lang="te" className="mt-2 text-sm text-muted-foreground">{daily.telugu}</p></div></section>}<section className="rounded-xl bg-blue-soft p-5"><Languages className="mb-3 size-7 text-blue"/><h2 className="text-base text-blue">Your words, in Kannada.</h2><p className="mt-2 text-xs text-muted-foreground">Find the right phrase for your next real-world moment.</p><Button asChild variant="ghost" className="mt-2 px-0 text-blue"><Link to="/translator">Try AI translator <ArrowRight/></Link></Button></section><div className="flex items-center gap-3 px-2"><span className="category-icon bg-yellow-soft text-yellow"><Trophy/></span><div><p className="text-xs font-extrabold">{learned?"First steps unlocked":"Your first badge awaits"}</p><p className="text-xs text-muted-foreground">Learn a word. Begin your journey.</p></div></div></aside></div>;}

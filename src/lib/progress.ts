@@ -35,7 +35,7 @@ export function parseProgress(raw: string | null): Progress {
     return {
       learnedWordIds: ids,
       quizzesTaken:
-        typeof d["quizzesTaken"] === "number" && d["quizzesTaken"] >= 0 ? Math.floor(d["quizzesTaken"]) : 0,
+        typeof d["quizzesTaken"] === "number" && Number.isFinite(d["quizzesTaken"]) && d["quizzesTaken"] >= 0 ? Math.floor(d["quizzesTaken"]) : 0,
       bestPercent: clampPercent(d["bestPercent"]),
       lastPercent: d["lastPercent"] === null || d["lastPercent"] === undefined ? null : clampPercent(d["lastPercent"]),
     };
@@ -78,7 +78,7 @@ export function recordQuizResult(p: Progress, score: QuizScore): Progress {
   };
 }
 
-const getStorage = () => (typeof window === "undefined" ? undefined : window.localStorage);
+const getStorage = () => { try { return typeof window === "undefined" ? undefined : window.localStorage; } catch { return undefined; } };
 
 export function useProgress() {
   const [progress, setProgress] = useState<Progress>(EMPTY_PROGRESS);

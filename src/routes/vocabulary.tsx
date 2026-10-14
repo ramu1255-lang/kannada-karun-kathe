@@ -15,16 +15,20 @@ export const Route = createFileRoute("/vocabulary")({
   component: VocabularyPage,
 });
 
+import { useGame } from "@/lib/game";
+
 function VocabularyPage() {
+  const {earn}=useGame();
   const { progress, update } = useProgress();
   return (
     <div>
+      <p className="section-label mb-2">Build your word collection</p>
       <h1 className="text-3xl font-bold">Vocabulary</h1>
-      <p className="mb-6 text-muted-foreground">Search, filter by category, and mark words you've learned.</p>
+      <p className="mb-6 text-muted-foreground">Everyday words. Real-world confidence.</p>
       <VocabularyBrowser
         words={VOCABULARY}
         learnedIds={progress.learnedWordIds}
-        onToggleLearned={(id) => update((p) => toggleLearned(p, id))}
+        onToggleLearned={(id) => { if(!progress.learnedWordIds.includes(id))earn(`word:${id}`,5);update((p) => toggleLearned(p, id)); }}
       />
     </div>
   );
