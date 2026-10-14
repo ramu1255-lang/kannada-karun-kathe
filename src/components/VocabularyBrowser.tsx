@@ -1,7 +1,12 @@
 import { useId, useMemo, useState } from "react";
-import { Check, Plus } from "lucide-react";
+import { Check, Plus, Heart } from "lucide-react";
 import { CATEGORIES, type CategoryId, type Word } from "@/lib/kannada/data";
 import { filterByCategory, isCategoryId, MAX_QUERY_LENGTH, searchVocabulary } from "@/lib/kannada/logic";
+
+import { Button } from "@/components/ui/button";
+import { ListenButton } from "@/components/ListenButton";
+import { useGame } from "@/lib/game";
+import { CATEGORY_STYLE } from "@/lib/category-style";
 
 interface Props {
   words: readonly Word[];
@@ -10,14 +15,16 @@ interface Props {
 }
 
 export function VocabularyBrowser({ words, learnedIds, onToggleLearned }: Props) {
+  const {game,toggleFavourite}=useGame();
+  const [favouritesOnly,setFavouritesOnly]=useState(false);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryId | "all">("all");
   const searchId = useId();
   const catId = useId();
 
   const results = useMemo(
-    () => searchVocabulary(filterByCategory(words, category), query),
-    [words, category, query],
+    () => searchVocabulary(filterByCategory(words, category), query).filter(w=>!favouritesOnly||game.favouriteIds.includes(w.id)),
+    [words, category, query, favouritesOnly, game.favouriteIds],
   );
   const learned = useMemo(() => new Set(learnedIds), [learnedIds]);
 
@@ -58,6 +65,7 @@ export function VocabularyBrowser({ words, learnedIds, onToggleLearned }: Props)
         </div>
       </form>
 
+      <Button variant={favouritesOnly?"secondary":"outline"} className="mt-4" aria-pressed={favouritesOnly} onClick={()=>setFavouritesOnly(!favouritesOnly)}><Heart/> Favourites</Button>
       <p role="status" aria-live="polite" className="mt-4 text-sm text-muted-foreground">
         {results.length} {results.length === 1 ? "word" : "words"} found
       </p>
@@ -71,7 +79,7 @@ export function VocabularyBrowser({ words, learnedIds, onToggleLearned }: Props)
           {results.map((w) => {
             const isLearned = learned.has(w.id);
             return (
-              <li key={w.id} className="rounded-xl border bg-card p-4">
+              <li key={w.id} className="panel p-5"><div className="mb-4 flex items-center justify-between"><span className={`rounded-md px-2 py-1 text-xs font-bold ${CATEGORY_STYLE[w.category].color}`}>{CATEGORIES.find(c=>c.id===w.category)?.label}</span><div className="flex"><ListenButton text={w.kannada}/><Button variant="ghost" size="icon" aria-label={`Favourite ${w.english}`} aria-pressed={game.favouriteIds.includes(w.id)} onClick={()=>toggleFavourite(w.id)}><Heart className={game.favouriteIds.includes(w.id)?"fill-coral text-coral":""}/></Button></div></div>
                 <p lang="kn" className="kannada-text text-2xl font-semibold">
                   {w.kannada}
                 </p>
@@ -83,7 +91,7 @@ export function VocabularyBrowser({ words, learnedIds, onToggleLearned }: Props)
                   <dt className="text-muted-foreground">Telugu</dt>
                   <dd lang="te">{w.telugu}</dd>
                 </dl>
-                <button
+                <Button variant="outline"
                   type="button"
                   aria-pressed={isLearned}
                   aria-label={`${isLearned ? "Unmark" : "Mark"} “${w.english}” as learned`}
@@ -92,7 +100,7 @@ export function VocabularyBrowser({ words, learnedIds, onToggleLearned }: Props)
                 >
                   {isLearned ? <Check aria-hidden="true" className="size-4" /> : <Plus aria-hidden="true" className="size-4" />}
                   {isLearned ? "Learned" : "Mark learned"}
-                </button>
+                </Button>
               </li>
             );
           })}
