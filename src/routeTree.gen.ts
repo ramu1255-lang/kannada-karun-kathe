@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ConversationsRouteImport } from './routes/conversations'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as TranslatorRouteImport } from './routes/translator'
 import { Route as VocabularyRouteImport } from './routes/vocabulary'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const QuizRoute = QuizRouteImport.update({
   path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TranslatorRoute = TranslatorRouteImport.update({
+  id: '/translator',
+  path: '/translator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VocabularyRoute = VocabularyRouteImport.update({
   id: '/vocabulary',
   path: '/vocabulary',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/conversations': typeof ConversationsRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
+  '/translator': typeof TranslatorRoute
   '/vocabulary': typeof VocabularyRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/conversations': typeof ConversationsRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
+  '/translator': typeof TranslatorRoute
   '/vocabulary': typeof VocabularyRoute
 }
 export interface FileRoutesById {
@@ -61,15 +69,34 @@ export interface FileRoutesById {
   '/conversations': typeof ConversationsRoute
   '/progress': typeof ProgressRoute
   '/quiz': typeof QuizRoute
+  '/translator': typeof TranslatorRoute
   '/vocabulary': typeof VocabularyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/conversations' | '/progress' | '/quiz' | '/vocabulary'
+  fullPaths:
+    | '/'
+    | '/conversations'
+    | '/progress'
+    | '/quiz'
+    | '/translator'
+    | '/vocabulary'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/conversations' | '/progress' | '/quiz' | '/vocabulary'
+  to:
+    | '/'
+    | '/conversations'
+    | '/progress'
+    | '/quiz'
+    | '/translator'
+    | '/vocabulary'
   id:
-    '__root__' | '/' | '/conversations' | '/progress' | '/quiz' | '/vocabulary'
+    | '__root__'
+    | '/'
+    | '/conversations'
+    | '/progress'
+    | '/quiz'
+    | '/translator'
+    | '/vocabulary'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +104,7 @@ export interface RootRouteChildren {
   ConversationsRoute: typeof ConversationsRoute
   ProgressRoute: typeof ProgressRoute
   QuizRoute: typeof QuizRoute
+  TranslatorRoute: typeof TranslatorRoute
   VocabularyRoute: typeof VocabularyRoute
 }
 
@@ -110,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/translator': {
+      id: '/translator'
+      path: '/translator'
+      fullPath: '/translator'
+      preLoaderRoute: typeof TranslatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vocabulary': {
       id: '/vocabulary'
       path: '/vocabulary'
@@ -125,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConversationsRoute: ConversationsRoute,
   ProgressRoute: ProgressRoute,
   QuizRoute: QuizRoute,
+  TranslatorRoute: TranslatorRoute,
   VocabularyRoute: VocabularyRoute,
 }
 export const routeTree = rootRouteImport
