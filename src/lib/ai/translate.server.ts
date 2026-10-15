@@ -25,11 +25,11 @@ export const translateToKannada = createServerFn({ method: "POST" })
     return { text };
   })
   .handler(async ({ data }): Promise<TranslationResult> => {
-    const apiKey = process.env.LOVABLE_API_KEY;
+    const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) throw new Error("AI_NOT_CONFIGURED");
 
     const provider = createLovableAiGatewayProvider(apiKey, undefined, {
-      baseURL: process.env.LOVABLE_AI_GATEWAY_URL ?? "https://ai.gateway.lovable.dev/v1",
+      baseURL: process.env["LOVABLE_AI_GATEWAY_URL"] ?? "https://ai.gateway.lovable.dev/v1",
     });
 
     const { text } = await generateText({
