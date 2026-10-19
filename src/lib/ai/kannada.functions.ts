@@ -27,7 +27,7 @@ export interface PracticeFeedback {
 
 type AiError = { error: string };
 
-async function askJson(system: string, prompt: string): Promise<Record<string, unknown> | AiError> {
+async function askJson(system: string, prompt: string): Promise<Record<string, unknown>> {
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) return { error: "AI service is not configured on the server." };
   const { createOpenAI } = await import("@ai-sdk/openai");
@@ -86,7 +86,7 @@ Reply with ONLY a JSON object with keys:
 "exampleMeaning": its meaning in English.
 Never invent meanings. If input is not meaningful, set translation to "" .`;
     const r = await askJson(system, data.text);
-    if ("error" in r && typeof r.error === "string") return { error: r.error };
+    if (typeof r.error === "string" && Object.keys(r).length === 1) return { error: r.error };
     const out: TranslationResult = {
       direction: data.direction,
       translation: s(r.translation),
@@ -121,7 +121,7 @@ Reply with ONLY JSON: {"correct": boolean, "feedbackTelugu": short explanation i
       system,
       `Situation: ${data.situation}\nOther person said: ${data.prompt}\nA good model reply: ${data.expected}\nLearner reply: ${data.answer}`,
     );
-    if ("error" in r && typeof r.error === "string") return { error: r.error };
+    if (typeof r.error === "string" && Object.keys(r).length === 1) return { error: r.error };
     return {
       correct: r.correct === true,
       feedbackTelugu: s(r.feedbackTelugu),
