@@ -1,5 +1,5 @@
 # Upgrade roadmap
-- [ ] Fix the current AI response TypeScript error and verify the build before further feature work.
+- [x] Fix the current AI response TypeScript error and verify the build before further feature work.
 - [ ] Refresh shared design, compact navigation, and learning home.
 - [ ] Expand vocabulary to 100+ entries with favourites and honest audio availability.
 - [ ] Add translation and scenario feedback with secure AI, history, and error states.
