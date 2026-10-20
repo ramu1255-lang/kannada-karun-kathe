@@ -27,7 +27,12 @@ export interface PracticeFeedback {
 
 type AiError = { error: string };
 
-async function askJson(system: string, prompt: string): Promise<Record<string, unknown>> {
+/** Named fields keep untrusted AI values unknown until each handler validates them. */
+type AiJsonResponse = Partial<
+  Record<keyof Omit<TranslationResult, "direction"> | keyof PracticeFeedback | "error", unknown>
+>;
+
+async function askJson(system: string, prompt: string): Promise<AiJsonResponse> {
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) return { error: "AI service is not configured on the server." };
   const { createOpenAI } = await import("@ai-sdk/openai");
@@ -50,7 +55,7 @@ async function askJson(system: string, prompt: string): Promise<Record<string, u
     const text = await result.text;
     const m = text.match(/\{[\s\S]*\}/);
     if (!m) return { error: "The AI returned an unreadable answer. Please retry." };
-    return JSON.parse(m[0]) as Record<string, unknown>;
+    return JSON.parse(m[0]) as AiJsonResponse;
   } catch (e) {
     const status = (e as { statusCode?: number }).statusCode;
     console.error("AI gateway error", status, e);
